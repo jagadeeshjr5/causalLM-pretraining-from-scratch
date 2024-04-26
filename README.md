@@ -1,17 +1,17 @@
 # causalLM-pretraining-from-scratch
 
-This is a 5M parameter Causal Language model based on Transformer Decoder only architecture, which is trained on just 2.3M tokens. 
+**This is a 5M parameter Causal Language model based on Transformer Decoder only architecture, which is trained on just 2.3M tokens. **
 
 
-Arcitecture details:
+**Arcitecture details:**
 1. Grouped Multi Query attention with 2:1 query, key ratio.
 2. ROPE with theta of 1e5.
 3. GELU activation with Tanh approximation.
 4. RMS Norm(Non parameterised) applied for boh input and output.
 
-model config:
+**Model config:**
 
-**config_dict = {
+config_dict = {
     "batch_size" : 56,
     "block_size" : 256,
     "embd" : 256,
@@ -29,4 +29,4 @@ model config:
     "start_pos" : 0,
     "temperature" : 0.5,
     "warmup_steps" : 3000
-}**
+}
