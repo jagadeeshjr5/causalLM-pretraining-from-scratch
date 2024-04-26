@@ -1,6 +1,6 @@
 # causalLM-pretraining-from-scratch
 
-**This is a 5M parameter Causal Language model based on Transformer Decoder only architecture, which is trained on just 2.3M tokens. **
+**This is a 5M parameter Causal Language model based on Transformer Decoder only architecture, which is trained on just 2.3M tokens.**
 
 
 **Arcitecture details:**
