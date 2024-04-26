@@ -11,7 +11,8 @@
 
 **Model config:**
 
-```config_dict = {
+```
+config_dict = {
     "batch_size" : 56,
     "block_size" : 256,
     "embd" : 256,
