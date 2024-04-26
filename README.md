@@ -11,7 +11,7 @@
 
 **Model config:**
 
-config_dict = {
+```config_dict = {
     "batch_size" : 56,
     "block_size" : 256,
     "embd" : 256,
@@ -29,4 +29,4 @@ config_dict = {
     "start_pos" : 0,
     "temperature" : 0.5,
     "warmup_steps" : 3000
-}
+}```
