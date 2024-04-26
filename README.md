@@ -9,6 +9,8 @@
 4. GELU activation with Tanh approximation.
 5. RMS Norm(Non parameterised) applied for both inputs and outputs.
 
+I've used a custom BPE tokenizer with GPT-4 initial token splitter trained using Andrej Karpathy's minbpe(slightly changed the trainer function for extending the vocab) with the vocab_size of 5000.
+
 **Model config:**
 
 ```
@@ -29,7 +31,8 @@ config_dict = {
     "eval_iters" : 150,
     "start_pos" : 0,
     "temperature" : 0.5,
-    "warmup_steps" : 3000
+    "warmup_steps" : 3000,
+    "vocab_size : 5000
 }
 ```
 
@@ -50,3 +53,6 @@ config_dict = {
 
 The overall training process went smoothly, and the final model effectively captures data patterns, sentence structures and some coherent sentences despite its small size. However, the model could be enhanced by adding more data and parameters to generate even more coherent sentences. As expected, the model was slightly overfitted, indicating there are no bugs in the model architecture and training code. This can be scaling to more parameters with minor modifications to the architecture.
 
+
+**Next Steps:***
+1. Scaling the model to 500M parameters and training it on a huge dataset using 1.58-bit quantization.
