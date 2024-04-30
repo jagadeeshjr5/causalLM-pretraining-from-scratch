@@ -3,16 +3,25 @@ import pandas as pd
 import torch
 import torch.nn as nn
 import torch.nn.functional as F
-from torch.utils.data import DataLoader, Dataset
+from torch.utils.data import DataLoader, Dataset, RandomSampler
 import torch.optim.lr_scheduler as lr_scheduler
 from minbpe import minbpe as bpe
-from typing import List
 import wandb
+from typing import List
 from tqdm.auto import tqdm
+import torch
+from torch.cuda.amp import autocast, GradScaler
+import inspect
+import pytorch_warmup as warmup
+from transformers import get_linear_schedule_with_warmup, get_constant_schedule_with_warmup, get_cosine_with_hard_restarts_schedule_with_warmup, get_cosine_schedule_with_warmup
 
+import warnings
+warnings.filterwarnings('ignore')
+
+from model import LanguageModel, param_dict
 
 class CustomDataset(Dataset):
-    def __init__(self, data, block_size):
+    def __init__(self, data, block_size : int):
         self.data = data
         self.block_size = block_size
 
@@ -24,7 +33,7 @@ class CustomDataset(Dataset):
     
 
     
-#Andrej karpathy's minbpe tokenizer
+#Andrej karpathy's minbpe tokenizer with a slight change in the trainer function to extend the tokenizer vocabulary.
 
 #!wget https://github.com/karpathy/minbpe.git
 
@@ -36,7 +45,7 @@ class Tokenizer:
         return None
     def encode(self, text : str):
         return self.tokenizer.encode(text)
-    def decode(self, enc_list : List):
+    def decode(self, enc_list):
         return self.tokenizer.decode(enc_list)
     def vocab(self):
         return self.tokenizer.vocab
@@ -46,107 +55,75 @@ class Tokenizer:
     def load(self, path):
         self.tokenizer.load(path)
         return f'Successfully loaded tokenizer'
-    
-    
+
 @torch.no_grad()
 def estimate_loss():
     out = {}
+    perplexity_out = {}
     model.eval()
     
     for split in ['train', 'val']:
         
         data = train_data if split == 'train' else val_data
         
-        dataset = CustomDataset(data, block_size)
-        dataloader = DataLoader(dataset, batch_size=batch_size, shuffle=True)
+        dataset = CustomDataset(data, param_dict['block_size'])
+        dataloader = DataLoader(dataset, batch_size=param_dict['batch_size'], shuffle=True)
         
-        losses = torch.zeros(eval_iters)
+        losses = torch.zeros(param_dict['eval_iters'])
+        perplexity_tensor = torch.zeros(param_dict['eval_iters'])
         for batch, (x_batch, y_batch) in enumerate(dataloader):
-            if batch == eval_iters:
+            if batch == param_dict['eval_iters']:
                 break            
-            x, y = x_batch.to(device), y_batch.to(device)
+            x, y = x_batch.to(param_dict['device']), y_batch.to(param_dict['device'])
             logits, loss = model(x, y)
+            perplexity = torch.exp(loss)
             losses[batch] = loss.item()
+            perplexity_tensor[batch] = perplexity.item()
         out[split] = losses.mean()
+        perplexity_out[split] = perplexity_tensor.mean()
+        
     model.train()
-    return out
+    return out, perplexity_out
     
 
 filenames = [
-    'crime-and-punishment-fedor-mikhailovitch-distoievski.txt',
-    '2. Oliver Twist Author Charles Dickens-compressed.txt',
-    '3. David Copperfield Author Charles Dickens-compressed.txt',
-    'don-quixote-miguel-de-cervantes.txt',
-    '3. The Lost World Author Arthur Conan Doyle.txt',
-    '2. Twenty Thousand Leagues Under the Seas Author Jules Verne.txt',
-    '1. The Time Machine Author H. G. Wells.txt'
+        'Harry-Potter-the-Complete-Series.txt',
+    'JRR-Tolkien-Lord-of-the-Rings-Collection.txt',
+    'Frank-Herberts-Dune-Saga-Collection-Books-1-6-by-Frank-Herbert.txt',
+    'Star-Wars-The-Old-Republic-Revan-PDF-Room.txt'
 ]
 
 text = ''
 for filename in filenames:
-    with open(f'C:/Transformers Pretraining/JARV1-MicroLM/data/{filename}', 'r', encoding='latin1') as f:
+    with open(f'data/{filename}', 'r', encoding='latin1') as f:
         text += f.read()
         
 
 tok = Tokenizer()
 
-tok.load(r'C:\Transformers Pretraining\New folder\tok3k.model')
+tok.load(r'tokenizer\tok5kV2.model')
+
+param_dict['vocab_size'] = len(tok.vocab())
 
 data = torch.tensor(tok.encode(text), dtype=torch.long)
-
-vocab_size = len(tok.vocab())
 
 n = int(0.9*len(data)) # first 90% will be train, rest val
 train_data = data[:n]
 val_data = data[n:]
 
-dataset = CustomDataset(train_data, block_size)
+dataset = CustomDataset(train_data, param_dict['block_size'])
 
-dataloader = DataLoader(dataset, batch_size=batch_size, shuffle=True)
+torch.manual_seed(4235246) #4235245
+np.random.seed(4235246)
 
-wandb.init(project="JARV1")
+random_sampler = RandomSampler(dataset, generator=torch.Generator().manual_seed(4235246))
 
-wandb.config = {"learning_rate": learning_rate, "epochs": 1, "batch_size": batch_size, "embd" : embd}
+dataloader = DataLoader(dataset, batch_size=param_dict['batch_size'], sampler=random_sampler)
 
-model = GPTLanguageModel()
+model = LanguageModel()
+optimizer = torch.optim.AdamW(model.parameters(), lr=param_dict['learning_rate'], weight_decay=0.99, betas=(0.9,  0.95))
 
-device = 'cuda'
-model = GPTLanguageModel()
-model = model.to(device)
-print(sum(p.numel() for p in model.parameters())/1e6, 'M parameters')
+model.load(optimizer=optimizer, checkpoint_path='checkpoints\checkpoint3c2-pretraining.pth')
 
-optimizer = torch.optim.AdamW(model.parameters(), lr=learning_rate)
-scheduler = lr_scheduler.MultiStepLR(optimizer, milestones=[12000], gamma=0.1)
-        
-wandb.watch(model, log="all", log_freq=10)
+model.start_train(data=dataloader, optimizer=optimizer, train_data=train_data, val_data=val_data, checkpoint_path='checkpoints\checkpoint3c2-pretraining.pth')
 
-accumulation_steps = 4
-for epoch in tqdm(range(1)):
-    model.train()
-    optimizer.zero_grad()
-    
-    for batch, (x_batch, y_batch) in tqdm(enumerate(dataloader)):
-        x, y = x_batch.to(device), y_batch.to(device)
-
-        if batch % 100 == 0 or batch == 1000 - 1:
-                losses = estimate_loss()
-                #print(f"               step {batch} / {len(dataloader)}: train loss {losses['train']:.4f}, val loss {losses['val']:.4f}")
-        
-                wandb.log({"batch": batch, "loss": losses})
-
-        logits, loss = model(x, y)
-        optimizer.zero_grad(set_to_none=True)
-        loss.backward()
-        
-        if (batch + 1) % accumulation_steps == 0:
-            optimizer.step()
-            optimizer.zero_grad()
-        
-            scheduler.step()
-        
-    losses = estimate_loss()
-    print(f"Epoch {epoch+1}/1: train loss {losses['train']:.4f}, val loss {losses['val']:.4f}")
-    wandb.log({"Epoch": epoch, "loss": losses})
-    
-context = torch.zeros((1, 1), dtype=torch.long, device=device)
-print(tok.decode(model.generate(context, max_new_tokens=1000)[0].tolist()))
