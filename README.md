@@ -1,6 +1,6 @@
 # causalLM-pretraining-from-scratch
 
-**A 5M parameter Causal Language model based on Transformer Decoder only architecture, which is trained on just 2.3M tokens on an RTX 3060 consumer GPU.**
+**This is a 5M parameter Causal Language model based on Transformer Decoder only architecture, which is trained on just 4M raw text tokens on my RTX 3060 gaming GPU.**
 
 **Arcitecture details:**
 1. Transformer - Decoder Only Arcitecture.
@@ -8,8 +8,9 @@
 3. ROPE with theta of 1e5.
 4. GELU activation with Tanh approximation.
 5. RMS Norm(Non parameterised) applied for both inputs and outputs.
+6. Skip connections.
 
-I've used a custom BPE tokenizer with GPT-4 initial token splitter trained using Andrej Karpathy's minbpe(slightly changed the trainer function for extending the vocab) with the vocab_size of 5000.
+I've trained a custom BPE tokenizer with GPT-4 initial token splitter using Andrej Karpathy's minbpe(slightly changed the trainer function for extending the vocab) with the vocab_size of 5000 for this model.
 
 **Model config:**
 
