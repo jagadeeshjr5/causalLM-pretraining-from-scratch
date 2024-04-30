@@ -55,6 +55,8 @@ config_dict = {
 
 The overall training process went smoothly, and the final model effectively captures data patterns, sentence structures and some coherent sentences despite its small size. However, the model could be enhanced by adding more data and parameters to generate even more coherent sentences. Luckily the model didn't overfit much, indicating there are no bugs in the model architecture and training code. This can be scalable to more parameters with minor modifications to the architecture.
 
+While the model is able to generate a conversation with back-and-forth dialogue between the characters by grasping the story but it misses the overall clarity in the generated text however it did grasps some coherence. This model is also able to generate well strcutred sentences with proper punctuations upto most extent.
+
 <<<pretraining & Finetuning results>>>
 
 **Next Steps:**
