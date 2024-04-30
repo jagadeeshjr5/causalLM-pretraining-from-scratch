@@ -268,7 +268,31 @@ def estimate_loss(model, train_data, val_data):
         
     #model.train()
     return out, perplexity_out
+
+
+class Tokenizer:
+    def __init__(self):
+        self.tokenizer = bpe.RegexTokenizer()
+    def train(self, text : str, vocab_size : int):
+        self.tokenizer.train(text, vocab_size)
+        return None
+    def encode(self, text : str):
+        return self.tokenizer.encode(text)
+    def decode(self, enc_list):
+        return self.tokenizer.decode(enc_list)
+    def vocab(self):
+        return self.tokenizer.vocab
+    def save(self, path):
+        self.tokenizer.save(path)
+        return f'Tokenizer saved to {path}'
+    def load(self, path):
+        self.tokenizer.load(path)
+        return f'Successfully loaded tokenizer'
     
+
+tok = Tokenizer()
+
+tok.load(r'tokenizer\tok5kV2.model')
 
 
 ##Final Model Class
