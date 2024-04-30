@@ -27,16 +27,16 @@ param_dict = {
     "head_size" : 256 // 8,
     "dropout" : 0.2,
     "n_layer" : 3,
-    "learning_rate" : 1.5e-4,  #3e-4
+    "learning_rate" : 3e-4,  #3e-4
     "n_splits" : 4,
     "norm_eps" : 2e-4,
     "device" : 'cuda',
     "accumulation_steps" : 1,
-    "epochs" : 1,
+    "epochs" : 2,
     "eval_iters" : 150,
     "start_pos" : 0,
     "temperature" : 0.5,
-    "warmup_steps" : 1000
+    "warmup_steps" : 3000
 }
 
 
@@ -152,47 +152,47 @@ class Attention(nn.Module):
     
     
     ##RMS Norm(Non parameterized)
-    class RMSNorm(nn.Module):
-        def __init__(self, dim: int, eps: float):
-            super().__init__()
-            self.eps = eps
-            self.weight = nn.Parameter(torch.ones(dim))
+class RMSNorm(nn.Module):
+    def __init__(self, dim: int, eps: float):
+        super().__init__()
+        self.eps = eps
+        self.weight = nn.Parameter(torch.ones(dim))
 
-        def _norm(self, x: torch.Tensor):
+    def _norm(self, x: torch.Tensor):
 
-            return x * torch.rsqrt(x.pow(2).mean(-1, keepdim=True) + self.eps)
+        return x * torch.rsqrt(x.pow(2).mean(-1, keepdim=True) + self.eps)
 
-        def forward(self, x: torch.Tensor):
-            #return self.weight * self._norm(x.float()).type_as(x)
-            return self._norm(x.float()).type_as(x)
+    def forward(self, x: torch.Tensor):
+        #return self.weight * self._norm(x.float()).type_as(x)
+        return self._norm(x.float()).type_as(x)
         
     
 
     ##Feed Forward Layer with GELU activation, Tanh approximation
-    class FeedForwardLayer(nn.Module):
-        def __init__(self):
-            super(FeedForwardLayer, self).__init__()
-            
-            self.w1 = nn.Linear(param_dict['embd'], 4 * param_dict['embd'], bias=True)
-            self.w2 = nn.Linear(4 * param_dict['embd'], param_dict['embd'], bias=True)
-            self.w3 = nn.Linear(param_dict['embd'], 4 * param_dict['embd'], bias=True)
-            
-            nn.init.kaiming_normal_(self.w1.weight, mode='fan_in')
-            nn.init.constant_(self.w1.bias, 0)
-            
-            nn.init.kaiming_normal_(self.w2.weight, mode='fan_in')
-            nn.init.constant_(self.w2.bias, 0)
-            
-            nn.init.kaiming_normal_(self.w3.weight, mode='fan_out')
-            nn.init.constant_(self.w3.bias, 0)
-            
-        def forward(self, x):
-            
-            gelu = F.gelu(self.w1(x), approximate='tanh')
-            x_V = self.w3(x)
-            x = gelu * x_V
-            x = self.w2(x)
-            return x
+class FeedForwardLayer(nn.Module):
+    def __init__(self):
+        super(FeedForwardLayer, self).__init__()
+        
+        self.w1 = nn.Linear(param_dict['embd'], 4 * param_dict['embd'], bias=True)
+        self.w2 = nn.Linear(4 * param_dict['embd'], param_dict['embd'], bias=True)
+        self.w3 = nn.Linear(param_dict['embd'], 4 * param_dict['embd'], bias=True)
+        
+        nn.init.kaiming_normal_(self.w1.weight, mode='fan_in')
+        nn.init.constant_(self.w1.bias, 0)
+        
+        nn.init.kaiming_normal_(self.w2.weight, mode='fan_in')
+        nn.init.constant_(self.w2.bias, 0)
+        
+        nn.init.kaiming_normal_(self.w3.weight, mode='fan_out')
+        nn.init.constant_(self.w3.bias, 0)
+        
+    def forward(self, x):
+        
+        gelu = F.gelu(self.w1(x), approximate='tanh')
+        x_V = self.w3(x)
+        x = gelu * x_V
+        x = self.w2(x)
+        return x
         
 
 
@@ -228,6 +228,46 @@ def calculate_norm(params, param_type='GRADIENTS'):
     else:
         mean_norm = sum(norms) / len(norms)
         return mean_norm
+    
+class CustomDataset(Dataset):
+    def __init__(self, data, block_size : int):
+        self.data = data
+        self.block_size = block_size
+
+    def __len__(self):
+        return len(self.data) - self.block_size
+
+    def __getitem__(self, index):
+        return self.data[index:index+self.block_size], self.data[index+1:index+self.block_size+1]
+    
+@torch.no_grad()
+def estimate_loss(model, train_data, val_data):
+    out = {}
+    perplexity_out = {}
+    #model.eval()
+    
+    for split in ['train', 'val']:
+        
+        data = train_data if split == 'train' else val_data
+        
+        dataset = CustomDataset(data, param_dict['block_size'])
+        dataloader = DataLoader(dataset, batch_size=param_dict['batch_size'], shuffle=True)
+        
+        losses = torch.zeros(param_dict['eval_iters'])
+        perplexity_tensor = torch.zeros(param_dict['eval_iters'])
+        for batch, (x_batch, y_batch) in enumerate(dataloader):
+            if batch == param_dict['eval_iters']:
+                break            
+            x, y = x_batch.to(param_dict['device']), y_batch.to(param_dict['device'])
+            logits, loss = model(x, y)
+            perplexity = torch.exp(loss)
+            losses[batch] = loss.item()
+            perplexity_tensor[batch] = perplexity.item()
+        out[split] = losses.mean()
+        perplexity_out[split] = perplexity_tensor.mean()
+        
+    #model.train()
+    return out, perplexity_out
     
 
 
@@ -280,7 +320,7 @@ class LanguageModel(nn.Module):
     
     torch.autograd.set_detect_anomaly(True)
     
-    def start_train(self, data, optimizer, checkpoint_path=None):
+    def start_train(self, data, optimizer, train_data, val_data, checkpoint_path=None):
         
         wandb.init(project="JARV1")
         wandb.config = {"learning_rate": param_dict['learning_rate'], "epochs": param_dict['epochs'], "batch_size": param_dict['batch_size'], "embd" : param_dict['embd']}
@@ -289,7 +329,7 @@ class LanguageModel(nn.Module):
         
         wandb.watch(self, log="all", log_freq=100)
         
-        total_steps = param_dict['epochs'] * len(dataloader)
+        total_steps = param_dict['epochs'] * len(data)
         
         #warmup_lr = get_cosine_schedule_with_warmup(optimizer, num_warmup_steps=param_dict['warmup_steps'], num_training_steps=total_steps)
         warmup_lr = warmup.LinearWarmup(optimizer, warmup_period=param_dict['warmup_steps'])
@@ -298,14 +338,10 @@ class LanguageModel(nn.Module):
         
         if checkpoint_path:
             checkpoint = torch.load(checkpoint_path)
-            cosine_lr.load_state_dict(checkpoint['scheduler_state_dict'])
+            #cosine_lr.load_state_dict(checkpoint['scheduler_state_dict'])
         
         
         batches = len(data)
-        
-        
-        if checkpoint_path:
-            checkpoint = torch.load(checkpoint_path)
             
         #scaler = GradScaler()
         
@@ -321,11 +357,11 @@ class LanguageModel(nn.Module):
 
             for batch, (x_batch, y_batch) in tqdm(enumerate(data), total=batches):
 
-                #if checkpoint_path:
-                #    if epoch <= checkpoint.get('epoch', 0) and batch <= checkpoint.get('batch', 0):
-                #        if epoch == checkpoint.get('epoch', 0) and batch == checkpoint.get('batch', 0):
-                #            print(f'Reinstating training from {epoch}th epoch, {batch + 1}th batch...')
-                #        continue
+                if checkpoint_path:
+                    if epoch <= checkpoint.get('epoch', 0) and batch <= checkpoint.get('batch', 0):
+                        if epoch == checkpoint.get('epoch', 0) and batch == checkpoint.get('batch', 0):
+                            print(f'Reinstating training from {epoch}th epoch, {batch + 1}th batch...')
+                        continue
 
                 
                 
@@ -356,7 +392,8 @@ class LanguageModel(nn.Module):
 
 
                 if batch % 500 == 0:
-                    losses, perplexity = estimate_loss()
+                    self.eval()
+                    losses, perplexity = estimate_loss(model=self, train_data=train_data, val_data=val_data)
                     #print(f"               step {batch} / {len(dataloader)}: train loss {losses['train']:.4f}, val loss {losses['val']:.4f}")
 
                     wandb.log({"batch": batch, "loss": losses, "perplexity" : perplexity})
@@ -370,6 +407,8 @@ class LanguageModel(nn.Module):
                     wandb.log({"batch": batch, "norm": norm, "gradient_norm" : mean_gradient_norm, "parameter_norm" : mean_parameter_norm})
                     print(f"Ratio of mean gradient norm to mean parameter norm: {norm}, gradient norm: {mean_gradient_norm}, parameter norm: {mean_parameter_norm}")
 
+                    self.train()
+
                 optimizer.zero_grad()
 
                 if batch in list(range(5000, batches + 5000, 5000)) or batch == batches-1:
@@ -381,7 +420,7 @@ class LanguageModel(nn.Module):
                         'scheduler_state_dict': cosine_lr.state_dict()
                         #'dataloader_state_dict': random_seed
                     }
-                    torch.save(checkpoint, r'C:\Transformers Pretraining\checkpoints\checkpoint3c1.pth')
+                    torch.save(checkpoint, r'checkpoints\checkpoint3c1.pth')
                     print(f"Saved checkpoints at epoch: {epoch} and batch: {batch}.")
                     output = self.inference(1000, temperature=0.75, top_k=5, top_p=0.92)
 
@@ -402,9 +441,9 @@ class LanguageModel(nn.Module):
         
         return f'Successfully saved model to {path}.' 
         
-    def load(self, checkpoint_path):
+    def load(self, optimizer, checkpoint_path):
         
-        checkpoint = torch.load('C:\Transformers Pretraining\checkpoints\checkpoint3c2epoch3v3.pth')
+        checkpoint = torch.load(checkpoint_path)
         self.load_state_dict(checkpoint['model_state_dict'])
         self.to('cuda')
 
@@ -421,8 +460,8 @@ class LanguageModel(nn.Module):
     @torch.no_grad
     def inference(self, max_new_tokens, temperature, top_k=None, top_p=None):
         self.eval()
-        #prompt = str(input("Prompt here: "))
-        prompt = "Harry talked to Gandalf about"
+        prompt = str(input("Prompt here: "))
+        #prompt = " "
         data = torch.tensor(tok.encode(prompt), dtype=torch.long)
         context = torch.tensor(data.view(1, len(data)), device=param_dict['device'])
         block_size = param_dict['block_size']
