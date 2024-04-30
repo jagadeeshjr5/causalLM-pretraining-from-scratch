@@ -55,5 +55,7 @@ config_dict = {
 
 The overall training process went smoothly, and the final model effectively captures data patterns, sentence structures and some coherent sentences despite its small size. However, the model could be enhanced by adding more data and parameters to generate even more coherent sentences. Luckily the model didn't overfit much, indicating there are no bugs in the model architecture and training code. This can be scalable to more parameters with minor modifications to the architecture.
 
+<<<pretraining & Finetuning results>>>
+
 **Next Steps:**
 1. Scaling the model to 500M parameters and training it on a huge dataset using 1.58-bit quantization.
