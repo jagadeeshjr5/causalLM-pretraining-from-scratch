@@ -55,7 +55,7 @@ config_dict = {
 
 The overall training process went smoothly, and the final model tried to effectively captures data patterns, sentence structures and some coherence in the sentences despite its small size. However, the model could be enhanced by adding more data and parameters to generate even more coherent sentences. Luckily the model didn't overfit much, indicating there are no bugs in the model architecture and training code. This can be scalable for a large language model with more parameters and with minor modifications to the architecture.
 
-While the model is able to mimic the authors style of writing by generating conversations with back-and-forth dialogue between the characters and grasping the story, but it lacks the overall clarity in the generated text, However it did achieves some coherence in sentences. Additionally, the model is capable of generating well-structured sentences with proper punctuation to a great extent.
+While the generated output is not that great but it is able to mimic the authors style of writing by generating conversations with back-and-forth dialogue between the characters and grasping the story. But it lacks the overall clarity in the generated text, However it did achieves some coherence in sentences. Additionally, the model is capable of generating well-structured sentences with proper punctuation to a great extent.
 
 **Generated sample:**
 
