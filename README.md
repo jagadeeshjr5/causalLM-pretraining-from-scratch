@@ -4,11 +4,12 @@
 
 **Arcitecture details:**
 1. Transformer - Decoder Only Arcitecture.
-2. Grouped Multi Query attention with 2:1 query, key ratio.
-3. ROPE with theta of 1e5.
-4. GELU activation with tanh approximation.
-5. RMS Norm(Non parameterised) applied for both inputs and outputs.
-6. Remaining vanilla transformer stuff.
+2. Context length - 256 & embd dims - 256.
+3. Grouped Multi Query attention with 2:1 query, key ratio.
+4. ROPE with theta of 1e5.
+5. GELU activation with tanh approximation.
+6. RMS Norm(Non parameterised) applied for both inputs and outputs.
+7. Remaining vanilla transformer stuff.
 
 I've trained a custom BPE tokenizer with GPT-4 initial token splitter using Andrej Karpathy's minbpe(slightly changed the trainer function for extending the vocab) with the vocab_size of 5000 for this model.
 
