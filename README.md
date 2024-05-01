@@ -6,7 +6,7 @@
 1. Transformer - Decoder Only Arcitecture.
 2. Grouped Multi Query attention with 2:1 query, key ratio.
 3. ROPE with theta of 1e5.
-4. GELU activation with Tanh approximation.
+4. GELU activation with tanh approximation.
 5. RMS Norm(Non parameterised) applied for both inputs and outputs.
 6. Skip connections.
 
