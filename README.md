@@ -8,7 +8,7 @@
 3. ROPE with theta of 1e5.
 4. GELU activation with tanh approximation.
 5. RMS Norm(Non parameterised) applied for both inputs and outputs.
-6. Skip connections.
+6. Remaining vanilla transformer stuff.
 
 I've trained a custom BPE tokenizer with GPT-4 initial token splitter using Andrej Karpathy's minbpe(slightly changed the trainer function for extending the vocab) with the vocab_size of 5000 for this model.
 
@@ -53,11 +53,11 @@ config_dict = {
 9. I trained this model using full precision floating point numbers because bfloat16 made the training slower for some reason. I also tried mixed precision training with PyTorch's AMP package, but it caused the numercial instability in the gradients.
 10. At first, the gradient and parameters ratio was high while training. Later on, it went down gradually and got closer to 1.
 
-The overall training process went smoothly, and the final model effectively captures data patterns, sentence structures and some coherent sentences despite its small size. However, the model could be enhanced by adding more data and parameters to generate even more coherent sentences. Luckily the model didn't overfit much, indicating there are no bugs in the model architecture and training code. This can be scalable to more parameters with minor modifications to the architecture.
+The overall training process went smoothly, and the final model tried to effectively captures data patterns, sentence structures and some coherence in the sentences despite its small size. However, the model could be enhanced by adding more data and parameters to generate even more coherent sentences. Luckily the model didn't overfit much, indicating there are no bugs in the model architecture and training code. This can be scalable for a large language model with more parameters and with minor modifications to the architecture.
 
-While the model is able to generate a conversation with back-and-forth dialogue between the characters by grasping the story but it misses the overall clarity in the generated text however it did grasps some coherence. This model is also able to generate well strcutred sentences with proper punctuations upto most extent.
+While the model is able to mimic the authors style of writing by generating conversations with back-and-forth dialogue between the characters and grasping the story, but it lacks the overall clarity in the generated text, However it did achieves some coherence in sentences. Additionally, the model is capable of generating well-structured sentences with proper punctuation to a great extent.
 
-<<<pretraining & Finetuning results>>>
+
 
 **Next Steps:**
 1. Scaling the model to 500M parameters and training it on a huge dataset using 1.58-bit quantization.
