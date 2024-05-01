@@ -60,83 +60,42 @@ While the model is able to mimic the authors style of writing by generating conv
 **Generated text:**
 
 ```
-He will be here soon to find a new home on Arrooen, and we'll
-be at least four hundred years ago. The Guild Bank has its uses.
-A: "The Gammu."
-   A deep grin came up on the city and stared at him in the face of
-the man's voice. "The Harkonnens were saying," he said. "We
-will not want that, I know." He turned, his face lighter with a
-fashioned armor. "We are not to be able to bind them or do this,
-possibility."
-   She looked down the table at the Landsraad. The Guildsman's
-voice came out flat and a smile on his face.
-   "The Bene Gesserit have no idea how the Sardaukar are.
-   "The Sardaukar will not be a Baron," she said.
-   He turned his face against the light, saw the door outlined
-cushion in her eyes. The old Fremen remained in the room. She
-was not there. It was a man of many places, but a man with a hood
-of hair was a black and a stilltent. She had a pale, dark eyes. He
-was still out in her mind, his eyes wide. His eyes were wide and his
-features, and she knew it could not be. His eyes were the eyes, its
-eyes fixed on her face.
-   "I have only the right hand of the Emperor in the Emperor," she
-said, his gaze left and right. "Alia, I'm not your father's son."
-   She stared down behind her. "You have not been a child."
-   "Yes, m'Lord. You and Hayt."
-   "And you're the one the young woman?"
-   "A man of many Fremen?"
-   "I am one who has not seen a Mentat, my Lady. I am the mate," she
-said. "But my inherited and I have the Atreides banner."
-   "I have not heard about him."
-   "Then you must know he was . . . I must have him alone and
-wait."
-   "I have." He nodded to himself. "Yes. You know, Paul."
-   "But you must be dangerous to me."
-   "You're sure he's dead," he said.
-   "He's a Mentat. He is so close to the Sardauko. I know you're
-conditioning. You're the most dangerous, a genesis of the Attendable
-Muad'Dib!"
-   "He has been here, Muad'Dib, what does he want of me?"
-   "It was . . . a Fremen?"
-   "Yes, I have not thought of myself as I did. I have only one
-children of the malignant, a male."
-   "And you said you could be the Atreides," she whispered. "The Empire
-are not a Fremen. The Fremen know melange is noted for the
-Harkonnens."
-   "I am the one who killed the Mentat," she said. "The Sardaukar
-must know what was in the desert. The Fremen have a new Bene
-Gesserit."
-   "But I am not a Tleilaxu."
-   She looked away from her, feeling the painfulness of his
-mouth. She felt a pang for the first time in the old days before the
-Sardaukar were in her life. The thing could be a ghola. He had seen
-this by being ascurious as the Tyrant. And here is what I have done.
-   He spoke of his own cart and he thought: The Tleilaxu had been
-always taken from a Reverend Mother and the Tleilaxu. The
-Sardaukar could be seen on this. She could not make her own oï¬spring,
-but Schwangyu had been infant, but he was a mask. She was not
-suspensor in a way of escape. He knew what he had been and
-had gone to this planet, the gholas: Mother Superior. And
-Honored Matres had taught him that Teg was always thinking
-about the Bene Gesserit.
-   Teg was right.
-   "The Tleilaxu Masters have some of the Bashar's men," she said. And as
-the gholas were only three times the Bashar had been ascribed to the
-Sisterhood, that many times-the Tleilaxu, of course. He had been a
-predator. It had been the first to bring in with the T-probe and now
-returned. The Bashar's favorite ghola. It had come out of the Scatter
-beside me and . . . and that was not the only person to reject a mentat. Schwangy-
-was-the most important thing of the ghola, a Bene Gesserit, an
-interesting person in a Reverend Mother with a Reverend Mother
-who had been on her way to the Sisterhood, her life in a mentat
-replacemor to the Bene Gesserit of his Mentats and not by all in a
-recalling of the Honored Matres, the Bene Gesserit, had been
-tempted when their ghola-atomics of Tarota, and the Sisterhood
-had never suspected him. It was an extensive thing which had once
-became into the ghola. She had known what had happened in this
-dembrane in the ghola. The Tleilaxu had been costingly
-deluable on the Spacing Guild, a Mother Sympocaused on the
-Honored Matres. But what of the ghola?
+Leto had not come back from the first, Sheeana's party. It had not
+realized her first hours had passed but the memory-lying of her
+response, which Taraza was requests, she thought. The Tleilaxu
+was being torn by that infinite universe, no longer human, but they
+had not seen her at this moment.
+   Sheeana was a Reverend Mother and her trades were seated
+with Fish Speaker training, but a cynical and unreal. The Land of
+the Bene Face Dancers was a Reverend Mother. The Suk, too, was
+not for this: he knew her psychologists.
+    "We must have no time to use the Empire!" Sheeana said.
+She had been the last words of the Bene Gesserit. The Guildsman was a
+multitudinal and capable of dispute with a diversion of
+destructive data. They had to be more than one male for her in the
+family provoked the Breeding Probe, the Ixians had its most influence. And the
+Mother Superior, the Guild naturally truly existent the Tyrans, and the
+power to which they were capably profound. She knew a Mentat could
+become another one, but that was more than two days or so.
+    The Bene Gesserit were inevitly the way Idaho had told her the way
+she'd been out there on the Bene Gesserit. The Bene Gesserit had
+sensed his intimate knowledge that the Bene Gesserit would not
+be denied their original memories.
+   "We do not understand this," Odrade said.
+   Teg glanced around the room. He could only see a face that
+werea man of influence on him.
+   The prize of her face flowed over the desert. He knew, of how
+that would be an organization and not association with that
+danger, is the future of the Bene Tleilax and the Bashar.
+    She saw the Bashar in his awareness: The universe of the Bene
+Gesserit, but the Bashar was one of the Tyrant's old patterns, and
+the Honored Matrior.
+   Those who had done what she had learned from her as "Power.
+Many would know."
+  Our genes. The Bashars were so good."
+                   The Mother Superior was not at all times but not right
+   that the Miles Tyrant himself had learned to read about the
+  Mentat Bene Gesserit. The Bene Tleilax as well as the Sisterhood.
 ```
 
 **Next Steps:**
