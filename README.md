@@ -1,6 +1,6 @@
 # causalLM-pretraining-from-scratch
 
-**This is a 5M parameter Causal Language model based on Transformer Decoder only architecture, which is trained on just 4M raw text tokens on my RTX 3060 gaming GPU.**
+**This is a 5M parameter Causal Language model based on Transformer Decoder only architecture trained on just >4M raw text tokens on an RTX 3060 gaming GPU.**
 
 **Arcitecture details:**
 1. Transformer - Decoder Only Arcitecture.
