@@ -44,7 +44,7 @@ config_dict = {
 **Training details:**
 
 1. The model was trained on the dataset of >4 million raw text tokens, with the block_size of 256 tokens and embedding dimensions of 256.
-2. Used RoPE to extend the context length during inference and enhancing token relations through relative position embeddings during training.
+2. Used RoPE to enhance the token relations through relative position embeddings during training.
 3. Used GELU activation function with tanh approximation in the Feed forward layer as it works better(But the exact reason is still not clear).
 4. Implemented Grouped Multi Query attention for faster training. But I didn't see much difference in the training time as my model is too small.
 5. I've chosen RMS Normalization because it simplifies the process by removing extra mean calculations, which has no impact, as mentioned in the paper.
