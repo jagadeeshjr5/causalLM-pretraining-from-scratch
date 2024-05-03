@@ -59,6 +59,10 @@ The overall training process went smoothly, and the final model tried to effecti
 
 While the generated output is not that great but it is able to mimic the authors style of writing by generating conversations with back-and-forth dialogue between the characters and grasping the story. But it lacks the overall clarity in the generated text, However it did achieves some coherence in sentences. Additionally, the model is capable of generating well-structured sentences with proper punctuation to a great extent.
 
+**Loss curve:**
+
+![alt text]([http://url/to/img.png](https://github.com/jagadeeshjr5/causalLM-pretraining-from-scratch/blob/6cdd9acf2881bd9c9c0e0d3dca407b66d2cf6fa9/phase1_loss_curve.png))
+
 **Generated sample:**
 
 ```
