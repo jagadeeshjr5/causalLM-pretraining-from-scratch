@@ -61,7 +61,7 @@ While the generated output is not that great but it is able to mimic the authors
 
 **Loss curve:**
 
-In the loss curve below, there is a clear decreasing trend in both the training and validation losses, suggesting that the model is not overfitting.
+In the loss curve below, there is a clear decreasing trend in both the training and validation losses, suggesting that the model is not overfitting. However, there are a few minor ridges; these are because of the cyclicLR scheduler.
 
 ![Alt text](https://github.com/jagadeeshjr5/causalLM-pretraining-from-scratch/blob/6cdd9acf2881bd9c9c0e0d3dca407b66d2cf6fa9/phase1_loss_curve.png)
 
