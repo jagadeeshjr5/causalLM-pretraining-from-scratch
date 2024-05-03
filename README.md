@@ -61,7 +61,7 @@ While the generated output is not that great but it is able to mimic the authors
 
 **Loss curve:**
 
-<img src="[/repository/assets/employee.png](https://github.com/jagadeeshjr5/causalLM-pretraining-from-scratch/blob/6cdd9acf2881bd9c9c0e0d3dca407b66d2cf6fa9/phase1_loss_curve.png)" alt="phase 1 loss curve" title="Phase 1 Loss Curve">
+![Alt text](https://github.com/jagadeeshjr5/causalLM-pretraining-from-scratch/blob/6cdd9acf2881bd9c9c0e0d3dca407b66d2cf6fa9/phase1_loss_curve.png)
 
 **Generated sample:**
 
