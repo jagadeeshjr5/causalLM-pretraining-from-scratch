@@ -1,0 +1,4 @@
+torch==2.3.0+cu121
+transformers==4.40.1
+wandb==0.16.6
+tqdm==4.66.2
